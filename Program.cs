@@ -9,12 +9,27 @@ namespace Linq
     {
         static void Main(string[] args)
         {
+            Sum();
+
             // CustomExtensionMethod();
 
-            MoreLinq();
+            // MoreLinq();
 
             Console.ReadLine();
 
+        }
+
+        private static void Sum()
+        {
+            var tracksDuration = "2:54,3:48,4:51,3:32,6:15,4:08,5:17,3:13,4:16,3:55,4:53,5:35,4:24";
+
+            var albumDuration =
+                tracksDuration
+                .Split(",")
+                .Select(d => TimeSpan.Parse("0:" + d))
+                .Aggregate((acc, t) => acc + t);
+
+            Console.WriteLine(albumDuration);
         }
 
         private static void MoreLinq()
