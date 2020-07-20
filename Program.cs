@@ -9,13 +9,34 @@ namespace Linq
     {
         static void Main(string[] args)
         {
-            Sum();
+            Range();
+
+            // Sum();
 
             // CustomExtensionMethod();
 
             // MoreLinq();
 
             Console.ReadLine();
+
+        }
+
+        private static void Range()
+        {
+            // should output 1,2,3,4,5,6
+
+            var ranges = "6,1-3,2-4"
+                .Split(',')
+                .Select(x => x.Split("-"))
+                .Select(p => new { First = int.Parse(p[0]), Last = int.Parse(p.Last()) })
+                .SelectMany(r => Enumerable.Range(r.First, r.Last - r.First + 1))
+                .OrderBy(r => r)
+                .Distinct();
+
+            foreach (var item in ranges)
+            {
+                Console.WriteLine(item);
+            }
 
         }
 
@@ -26,7 +47,7 @@ namespace Linq
             var albumDuration =
                 tracksDuration
                 .Split(",")
-                .Select(d => TimeSpan.Parse("0:" + d))
+                .Select(d => TimeSpan.Parse("0: " + d))
                 .Aggregate((acc, t) => acc + t);
 
             Console.WriteLine(albumDuration);
