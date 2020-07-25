@@ -1,6 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 using static MoreLinq.Extensions.PairwiseExtension;
 
 namespace Linq
@@ -9,7 +15,9 @@ namespace Linq
     {
         static void Main(string[] args)
         {
-            Range();
+            SunstoneFIHR();
+
+            //Range();
 
             // Sum();
 
@@ -19,6 +27,81 @@ namespace Linq
 
             Console.ReadLine();
 
+        }
+
+        private static async void SunstoneFIHR()
+        {
+            JObject respDynamic = JObject.Parse(File.ReadAllText(@"org.json"));
+
+            var y = respDynamic
+                .SelectToken("$..telecom");
+
+            dynamic administratorTelecom = respDynamic
+                .SelectToken("$..telecom")
+                .Where(telecom => telecom.Value<string>("system") == "Email")
+                .OrderBy(telecom => telecom.Value<int>("rank"))
+                .FirstOrDefault();
+
+            var administratorMail = administratorTelecom?.value;
+
+            // Questo funziona
+            //var mail = respDynamic
+            //    .SelectToken("$..telecom")
+            //    .Select(contact => new { System = contact.Value<string>("system"), Value = contact.Value<string>("value") })
+            //    .Where(c => c.System == "Email")
+            //    .FirstOrDefault();
+
+
+            //foreach (dynamic item in contacts)
+            //{
+            //    string system = item.system;
+            //}
+
+            //using (HttpClient httpClient = new HttpClient())
+            //{
+            //    httpClient.DefaultRequestHeaders.Add("eHRSys", "o4a");
+            //    httpClient.DefaultRequestHeaders.Add("CorrelationId", Guid.NewGuid().ToString());
+            //    httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "8155bde6b68b475eb085cacaf1053258");
+
+            //    httpClient.BaseAddress = new Uri("https://snsapi-d.fmcgds-np.com");
+
+            //    var request = new HttpRequestMessage(HttpMethod.Get, "/api/fhir/organizations/46dfa88d-78f5-4862-9c9b-2fff477bd9e6");
+
+            //    var res = await httpClient.SendAsync(request);
+
+            //    var respBody = await res.Content.ReadAsStringAsync();
+
+            //    JObject resp = JsonConvert.DeserializeObject<JObject>(respBody);
+
+            //    //resp.se
+
+            //    dynamic respDynamic = JsonConvert.DeserializeObject(respBody);
+
+            //    dynamic contacts = respDynamic.SelectToken("$..telecom");
+
+            //    foreach (var item in contacts)
+            //    {
+            //        string system = item.system;
+            //    }
+
+            //    //IEnumerable<JToken> orgProperties =  resp.Children();
+
+            //    //var contacts = ((JArray)respDynamic.SelectToken("$..telecom"))
+            //    //    .Select(j => new { System = j.Value<string>("system"), Value = j.Value<string>("value") });
+
+            //    //var y = contacts.Select(j => new { System = j.Value<string>("system"), Value = j.Value<string>("value") });
+
+            //    //var contact = contacts.ElementAt(0);
+            //    //.Select(j => new { System = j.Value<string>("system"), Value = j.Value<string>("value")});
+
+            //    //JToken jToken = JObject.Parse(respBody);
+
+            //    //jToken.SelectTokens()
+
+            //    // var c = respDynamic.contact[0].telecom;
+
+            //    //var x = c.Select(c => c.telecom);
+            //}
         }
 
         private static void Range()
