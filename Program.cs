@@ -17,13 +17,8 @@ namespace Linq
         {
             SunstoneFIHR();
 
-            //Range();
-
-            // Sum();
-
-            // CustomExtensionMethod();
-
-            // MoreLinq();
+            // Example/test calls for Range, Sum, etc. have been moved to ProgramTests.cs
+            // or were already commented out.
 
             Console.ReadLine();
 
@@ -104,11 +99,9 @@ namespace Linq
             //}
         }
 
-        private static void Range()
+        public static IEnumerable<int> Range(string input)
         {
-            // should output 1,2,3,4,5,6
-
-            var ranges = "6,1-3,2-4"
+            var ranges = input
                 .Split(',')
                 .Select(x => x.Split("-"))
                 .Select(p => new { First = int.Parse(p[0]), Last = int.Parse(p.Last()) })
@@ -116,11 +109,7 @@ namespace Linq
                 .OrderBy(r => r)
                 .Distinct();
 
-            foreach (var item in ranges)
-            {
-                Console.WriteLine(item);
-            }
-
+            return ranges;
         }
 
         private static void Sum()
